@@ -16,30 +16,30 @@ The project is comprised of three separate programs:
 
 <h2>YouTube Bot Server</h2>
 
-This program houses the (1) socket server for connecting to the client(s) program and also the (2) socket server for connecting to the video generator client(s). Additionally, this program will also grab new scripts from Reddit every one hour, and will also update the existing ones that have not yet been edited.
+This program houses the (1) socket server for connecting to the client(s) program and also the (2) socket server for connecting to the video generator client(s). Additionally, this program will also grab new scripts from Reddit every hour, and will also update the existing ones that have not yet been edited.
 
 (1)	This socket server will send raw scripts from the database to the manual review program (see below). It will then receive these reviewed scripts and update the database with the finalised scripts which will include a thumbnail, description and title. The server can handle multiple clients so multiple people can edit these scripts.
 
-(2)	The video generator server is currently only designed to handle one video generator client. Original plans were for this server to handle multiple video generator clients spread out between multiple computers. However, I found that one computer was sufficient enough for all my video generation needs, so I decided to hard code it to only one client. The purpose of this server is to send finalised scripts from the database to the video generator client.
+(2)	The video generator server is currently only designed to handle one video generator client. The original plans were for this server to handle multiple video generator clients spread out between multiple computers. However, I found that one computer was sufficient enough for all my video generation needs, so I decided to hard code it to only one client. The purpose of this server is to send finalized scripts from the database to the video generator client.
 
 <h2>YouTube Bot Video Generator Client</h2>
 
-This program will receive finalised video scripts from the YouTube Bot Video Generator Server which include thumbnails, descriptions, tags and a title. These scripts will be generated into a mp4 file and then uploaded to YouTube at a scheduled release time.
+This program will receive finalized video scripts from the YouTube Bot Video Generator Server which include thumbnails, descriptions, tags and a title. These scripts will be generated into a mp4 file and then uploaded to YouTube at a scheduled release time.
 
 Once a video is successfully uploaded its status is set to complete along with an upload time so that the program can check how many videos were uploaded within the day to avoid exceeding API quota usage. 
 
 **Text-To-Speech**
-This part of the program has been modified many times in this program's time of me using it, first it used balabolka back in 2019 and early 2020. Then, later in 2020 I switched to use AWS for the voices as I found it had higher quality with a very low cost. Then eventually ElevenLabs became the leader in this department and I used it in this program as well as the one that came after.
+This part of the program has been modified many times in this program's time of me using it, first it used balabolka back in 2019 and early 2020. Then, later in 2020, I switched to use AWS for the voices as I found it had higher quality with a very low cost. Then eventually ElevenLabs became the leader in this department and I used it in this program as well as the one that came after.
 
 <h2>YouTube Bot Client</h2>
 
-The client program has a process to filter out comments that are not to be included in the video. It also allows for the user to write the title and upload a thumbnail for the video as well as edit description and tags, although the title, description and tags are partially generated as follows:
+The client program has a process to filter out comments that are not to be included in the video. It also allows for the user to write the title and upload a thumbnail for the video as well as edit the description and tags, although the title, description and tags are partially generated as follows:
 Title: Be default is the post title
 Description: By default is a generated template with the post title within it and a couple hashtags
 Tags: Some base tags I got from popular text-to-speech channels such as r/askreddit,reddit,reddit funny etc.
 All of these can be edited. A template for the thumbnail is partially generated as well. There are checks to make sure that the amount of characters are not exceeded for all of these fields e.g. title must be under 100 characters
 
-The final content of the video includes the edited script, the thumbnail, tags, description and the video settings (it is possible to change certain features of the video generator template during the editing process such as background colour, text size, line widths etc. I usually kept the defaults so didn’t really have much use for it) which is then sent off to the server which in turn uploads it to the database as a BLOB.
+The final content of the video includes the edited script, the thumbnail, tags, the description and the video settings (it is possible to change certain features of the video generator template during the editing process such as background colour, text size, line widths etc. I usually kept the defaults so didn’t really have much use for it) which is then sent off to the server which in turn uploads it to the database as a BLOB.
 
 **MySQL**
 
@@ -61,11 +61,11 @@ Like the users, I designed the client to have a username and password to login. 
 These tables will be automatically created within a database called “youtubebot” if they do not already exist.
 
 <h2>Receiving Reddit Scripts</h2>
-I used praw to get the reddit posts (scripts). By default I have set it to get 100 scripts from the hot tab on r/AskReddit. The minimum number of comments per script must be 1000. It will take 50 of the highest rated comments from each post, and five of subsequent highest rated replies to each comment. The code for this is located in the YouTube Bot Server under reddit.py
-Be default on start up of the YouTube Bot Server, it will request scripts, then it will request every one hour after this. If the script is already in the database it will update the database script entry with the updated comments/upvote values.
+I used praw to get the Reddit posts (scripts). By default, I have set it to get 100 scripts from the hot tab on r/AskReddit. The minimum number of comments per script must be 1000. It will take 50 of the highest-rated comments from each post, and five of the subsequent highest-rated replies to each comment. The code for this is located in the YouTube Bot Server under reddit.py
+Be default on start-up of the YouTube Bot Server, it will request scripts, then it will request every one hour after this. If the script is already in the database it will update the database script entry with the updated comments/upvote values.
 
 
-Receive credentials for your google API account will be downloaded and saved automatically following a one time login (your browser window will be opened requesting a google account login): videouploader.py -> get_credentials()
+Receive credentials for your Google API account will be downloaded and saved automatically following a one-time login (your browser window will be opened requesting a Google account login): videouploader.py -> get_credentials()
 
 ## UI Showcase
 
@@ -85,4 +85,4 @@ This is the UI I created to edit and QC the content that will be displayed in th
 This is a later update to the video editor UI that allowed you to see the comments you chose to keep and skip in the program<br>
 ![unknown](https://github.com/user-attachments/assets/1c5612fa-d45c-4ac2-8ca0-40a3a89c8051)<br>
 
-I really wish I had more pictures of the UI but I only took them while making to show my friends and the video editor part was the main one I was proud of since it took many weeks to build. What is shown in the images isn't the most final version of what the videos looked like since I significantly changed the look of them as well to be just the paragraphs of text over a half opacity black rectangle on top of a compilation of stock videos.
+I really wish I had more pictures of the UI but I only took them while making to show my friends and the video editor part was the main one I was proud of since it took many weeks to build. What is shown in the images isn't the most final version of what the videos looked like since I significantly changed the look of them as well to be just the paragraphs of text over a half-opacity black rectangle on top of a compilation of stock videos.
